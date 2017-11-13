@@ -49,7 +49,7 @@ export function calculateResult(autobots, deceptions) {
         curr_autobot.isDestroyed = true;
         curr_autobot.isDestroyed = true;
         break;
-      case 'ALL_DIE':
+      case 'ALL_DIED':
         isAllDied = true;
         break;
       default:
@@ -92,7 +92,7 @@ function getWinningTeam(autobot, deception) {
   const isDeceptionMaster = deception.name === 'Optimus Prime' || deception.name === 'Predaking';
 
   if(isAutobotMaster && isDeceptionMaster) {
-    return 'ALL_DIE';
+    return 'ALL_DIED';
   } 
   
   if (isAutobotMaster) {
