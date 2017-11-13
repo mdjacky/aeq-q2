@@ -4,7 +4,7 @@ import InputTransformer from '../containers/inputTransformer';
 import TeamList from '../containers/teamList';
 import Result from '../containers/result';
 
-import style from './app.scss';
+import style from '../../style/app.scss';
 
 export default class App extends Component {
   render() {

@@ -8,4 +8,6 @@ This is simple app created by reactjs + redux.
 > cd aeq-q2
 > npm install
 > npm start
+
+Check the app in your browser on localhost:8080
 ```

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { deleteTransformer } from '../actions/index';
-import style from './teamList.scss';
+import style from '../../style/teamList.scss';
 
 
 class TeamList extends Component {

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { calculateResult, clearAll } from '../actions/index';
-import style from './result.scss';
+import style from '../../style/result.scss';
 
 class Result extends Component {
   constructor(props) {

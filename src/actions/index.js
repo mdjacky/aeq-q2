@@ -1,4 +1,3 @@
-
 export function addTransformer(transformer) {
   return {
     type: transformer.team === 'autobots'? 'ADD_AUTO' : 'ADD_DECP',
@@ -24,72 +23,46 @@ export function calculateResult(autobots, deceptions) {
   autobots.forEach(transformer => transformer.isDestroyed = false );
   deceptions.forEach(transformer => transformer.isDestroyed = false );
 
-  //Sort by rank
+  // Sort by rank
   autobots = autobots.sort((a, b) => { return b.rank - a.rank; });
   deceptions = deceptions.sort((a, b) => { return b.rank - a.rank; });
   
-  //Fight
-  let winningTeam = '';
-  let lostTeamSurvivors = [];
-  
+  // Fight
+  let isAllDied = false;
   let autoScore = 0;
   let i = 0;
-  while(i<autobots.length && i<deceptions.length) {
+  
+  while(i<autobots.length && i<deceptions.length && !isAllDied) {
     const curr_autobot = autobots[i];
     const curr_deception = deceptions[i];
 
-    //Check Name
-    const isAutobotMaster = curr_autobot.name === 'Optimus Prime' || curr_autobot.name === 'Predaking';
-    const isDeceptionMaster = curr_deception.name === 'Optimus Prime' || curr_deception.name === 'Predaking';
-    
-    if(isAutobotMaster && isDeceptionMaster) {
-      winningTeam = 'Tie';
-      autobots = [];
-      deceptions = [];
-      i++;
-      break;
-    } else if (isAutobotMaster) {
-      autoScore++;
-      curr_deception.isDestroyed = true;
-    } else if (isDeceptionMaster) {
-      autoScore--;
-      curr_autobot.isDestroyed = true;
-    } 
-    //Check courage and strength
-    else if(curr_autobot.courage + 4 <= curr_deception.courage && curr_autobot.strength + 3 <= curr_deception.strength) {
-      autoScore--;
-      curr_autobot.isDestroyed = true;
-    } else if (curr_deception.courage + 4 <= curr_autobot.courage && curr_deception.strength + 3 <= curr_autobot.strength) {
-      autoScore++;
-      curr_deception.isDestroyed = true;
-    }
-    //Check skill
-    else if (curr_autobot.skill + 3 <= curr_deception.skill) {
-      autoScore--;
-      curr_autobot.isDestroyed = true;
-    } else if (curr_deception.skill + 3 <= curr_autobot.skill) {
-      autoScore++;
-      curr_deception.isDestroyed = true;
-    }
-    //Check overall rating
-    else if (getOverallRating(curr_autobot) < getOverallRating(curr_deception)) {
-      autoScore--;
-      curr_autobot.isDestroyed = true;
-    } else if (getOverallRating(curr_autobot) > getOverallRating(curr_deception)) {
-      autoScore++;
-      curr_deception.isDestroyed = true;
-    }
-    //Tie 
-    else {
-      curr_autobot.isDestroyed = true;
-      curr_deception.isDestroyed = true;
-    }
+    switch(getWinningTeam(curr_autobot, curr_deception)) {
+      case 'autobot':
+        autoScore++;
+        curr_deception.isDestroyed = true;
+        break;
+      case 'deception':
+        autoScore--;
+        curr_autobot.isDestroyed = true;
+        break;
+      case 'tie':
+        curr_autobot.isDestroyed = true;
+        curr_autobot.isDestroyed = true;
+        break;
+      case 'ALL_DIE':
+        isAllDied = true;
+    };
 
     i++;
   }
 
-  //Summary the result
-  if(winningTeam !== 'Tie'){
+  // Summary the result
+  let lostTeamSurvivors = [];
+  let winningTeam = '';
+
+  if(isAllDied){
+    winningTeam = 'Tie';
+  } else {
     if(autoScore > 0) {
       winningTeam = 'Autobots';
       lostTeamSurvivors = deceptions.filter(transformer => !transformer.isDestroyed);
@@ -109,6 +82,54 @@ export function calculateResult(autobots, deceptions) {
       lostTeamSurvivors
     }
   };
+}
+
+function getWinningTeam(autobot, deception) {
+  //Check name
+  const isAutobotMaster = autobot.name === 'Optimus Prime' || autobot.name === 'Predaking';
+  const isDeceptionMaster = deception.name === 'Optimus Prime' || deception.name === 'Predaking';
+
+  if(isAutobotMaster && isDeceptionMaster) {
+    return 'ALL_DIE';
+  } 
+  
+  if (isAutobotMaster) {
+    return 'autobot';
+  } 
+  
+  if (isDeceptionMaster) {
+    return 'deception';
+  }
+
+  //Check courage and strength value
+  if(autobot.courage + 4 <= deception.courage && autobot.strength + 3 <= deception.strength) {
+    return 'deception';
+  } 
+  
+  if (deception.courage + 4 <= autobot.courage && deception.strength + 3 <= autobot.strength) {
+    return 'autobot';
+  }
+
+  //Check skill value
+  if (autobot.skill + 3 <= deception.skill) {
+    return 'deception';
+  }
+
+  if (deception.skill + 3 <= autobot.skill) {
+    return 'autobot';
+  }
+
+  //Check overall rating value
+  if (getOverallRating(autobot) < getOverallRating(deception)) {
+    return 'deception';
+  }
+  
+  if (getOverallRating(autobot) > getOverallRating(deception)) {
+    return 'autobot';
+  }
+
+  //Tie 
+  return 'tie';
 }
 
 function getOverallRating({ strength, intelligence, speed, endurance, firepower }) {
