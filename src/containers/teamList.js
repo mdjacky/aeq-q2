@@ -52,7 +52,7 @@ class TeamList extends Component {
 
     return (
       <div className="team-list">
-        <h3>{this.props.team}</h3>
+        <h3>{this.props.teamName}</h3>
         <table className="table table-hover table-striped table-bordered">
           <thead className="thead-dark">
             <tr>
@@ -80,7 +80,7 @@ class TeamList extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     teamList: state[ownProps.team],
-    team: ownProps.name
+    teamName: ownProps.name
   };
 }
 
