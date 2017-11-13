@@ -9,9 +9,9 @@ import style from '../../style/teamList.scss';
 class TeamList extends Component {
 
   render() {
-    const teamList = this.props.teamList? this.props.teamList.map((transformer, index) => {
+    const teamList = this.props.teamList? this.props.teamList.map(transformer => {
       return (
-        <tr key={index}>
+        <tr key={transformer.name}>
           <td>
             {transformer.name}
           </td>

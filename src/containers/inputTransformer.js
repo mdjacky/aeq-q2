@@ -34,12 +34,12 @@ class InputTransformer extends Component {
   handleChange(event) {
     const transformer = this.state.transformer;
 
-    if (event.target.name !== 'name' && event.target.name !== 'team') {
+    if (event.target.type === 'number') {
       transformer[event.target.name] = parseInt(event.target.value);
-    } else {
+    } else if (event.target.value && event.target.value.trim()){
       transformer[event.target.name] = event.target.value;
     }
-    
+
     this.setState({ transformer });
   }
 
@@ -48,7 +48,7 @@ class InputTransformer extends Component {
     const transformer = this.state.transformer;
   
     if(this.checkExist(this.props[transformer.team], transformer)){
-      this.setState({ error: 'It looks like the name of your transformer is already in the autobots list.' });
+      this.setState({ error: `It looks like the name of your transformer is already in the ${transformer.team} team.` });
       return;
     }
 
