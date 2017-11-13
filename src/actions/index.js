@@ -51,6 +51,8 @@ export function calculateResult(autobots, deceptions) {
         break;
       case 'ALL_DIE':
         isAllDied = true;
+        break;
+      default:
     };
 
     i++;
@@ -128,7 +130,6 @@ function getWinningTeam(autobot, deception) {
     return 'autobot';
   }
 
-  //Tie 
   return 'tie';
 }
 

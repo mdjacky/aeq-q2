@@ -16,29 +16,6 @@ class InputTransformer extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    const transformer = this.state.transformer;
-    transformer[event.target.name] = event.target.value;
-    this.setState({ transformer });
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-  
-    const team = this.state.transformer.team;
-    if(this.checkExist(this.props[team], this.state.transformer)){
-      this.setState({ error: 'It looks like the name of your transformer is already in the autobots list.' });
-      return;
-    }
-
-    this.setState({ error: '' });
-
-    this.props.addTransformer(Object.assign({}, this.state.transformer));
-    this.setState({ 
-      transformer: this.getInitTransformer()
-    });
-  }
-
   getInitTransformer() {
     return {
       name: '',
@@ -52,6 +29,35 @@ class InputTransformer extends Component {
       firepower: 0,
       skill: 0
     };
+  }
+
+  handleChange(event) {
+    const transformer = this.state.transformer;
+
+    if (event.target.name !== 'name' && event.target.name !== 'team') {
+      transformer[event.target.name] = parseInt(event.target.value);
+    } else {
+      transformer[event.target.name] = event.target.value;
+    }
+    
+    this.setState({ transformer });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const transformer = this.state.transformer;
+  
+    if(this.checkExist(this.props[transformer.team], transformer)){
+      this.setState({ error: 'It looks like the name of your transformer is already in the autobots list.' });
+      return;
+    }
+
+    this.setState({ error: '' });
+
+    this.props.addTransformer(Object.assign({}, transformer));
+    this.setState({ 
+      transformer: this.getInitTransformer()
+    });
   }
 
   checkExist(team, transformer) {
@@ -93,7 +99,7 @@ class InputTransformer extends Component {
                 className="form-control"
                 placeholder='Name'
                 name='name'
-                maxlength='20'
+                maxLength='20'
                 value={this.state.transformer.name}
                 onChange={this.handleChange}/>
             </td>
